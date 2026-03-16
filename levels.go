@@ -42,3 +42,18 @@ func (l Level) String() string {
 		return str("ERROR", l-LevelError)
 	}
 }
+
+// MarshalText implements [encoding.TextMarshaler].
+func (l Level) MarshalText() ([]byte, error) {
+	return slog.Level(l).MarshalText()
+}
+
+// UnmarshalText implements [encoding.TextUnmarshaler].
+func (l *Level) UnmarshalText(data []byte) error {
+	var sl slog.Level
+	if err := sl.UnmarshalText(data); err != nil {
+		return err
+	}
+	*l = Level(sl)
+	return nil
+}
